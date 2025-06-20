@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Code Explainer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Code Explainer</h1>
+  </header>
+  <main>
+    <p>Paste your code below and get an instant explanation:</p>
+    <textarea id="code" rows="10" cols="60"></textarea><br>
+    <button onclick="sendCode()">Explain</button>
+    <pre id="result"></pre>
+  </main>
+
+  <script>
+    function sendCode() {
+      const code = document.getElementById("code").value;
+      fetch("/api/explain", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ code })
+      })
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("result").textContent = data.explanation;
+      });
+    }
+  </script>
+</body>
+</html>
