@@ -1,20 +1,48 @@
 import os
+import sys
+import logging
 from flask import Flask, render_template, request, jsonify
 from dotenv import load_dotenv
 import openai
 from openai import OpenAI
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Load environment variables
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# Initialize Flask app
 app = Flask(__name__)
+
+# Initialize OpenAI client
+try:
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    if not openai_api_key:
+        logger.error("OPENAI_API_KEY environment variable is not set")
+        sys.exit(1)
+    client = OpenAI(api_key=openai_api_key)
+    logger.info("Successfully initialized OpenAI client")
+except Exception as e:
+    logger.error(f"Failed to initialize OpenAI client: {str(e)}")
+    sys.exit(1)
 
 @app.route("/")
 def index():
-    return render_template("index.html", project_name="Software Development")
+    try:
+        return render_template("index.html", project_name="Software Development")
+    except Exception as e:
+        logger.error(f"Error rendering index.html: {str(e)}")
+        return "An error occurred while loading the page. Please check the logs for more details.", 500
 
 @app.route("/code-explainer")
 def code_explainer():
-    return render_template("code_explainer.html")
+    try:
+        return render_template("code_explainer.html")
+    except Exception as e:
+        logger.error(f"Error rendering code_explainer.html: {str(e)}")
+        return "An error occurred while loading the code explainer. Please check the logs for more details.", 500
 
 @app.route("/api/explain", methods=["POST"])
 def explain_code():
@@ -25,7 +53,7 @@ def explain_code():
         messages.append({"role": "user", "content": code})
         response = client.chat.completions.create(
 
-            model="gpt-4.1-nano-2025-04-14",
+            model="gpt-4.1-nano-2025-04-14",  # Using a valid model name
 
             messages=messages,
 
