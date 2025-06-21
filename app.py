@@ -16,11 +16,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Log environment variables (except sensitive ones)
-logger.info("Starting application...")
-logger.info(f"Python version: {sys.version}")
-logger.info(f"OpenAI version: {openai.__version__}")
-logger.info(f"Environment variables: { {k: v for k, v in os.environ.items() if 'KEY' not in k and 'SECRET' not in k} }")
 
 # Load environment variables
 load_dotenv()
@@ -93,7 +88,16 @@ def explain_code():
 
     
 
+# Health check endpoint for Railway
+@app.route('/health')
+def health_check():
+    return jsonify({"status": "healthy"}), 200
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8080))  # Changed default port to 8080 to match Railway's expectation
+    port = int(os.environ.get("PORT", 8080))
     logger.info(f"Starting Flask server on port {port}")
-    app.run(host="0.0.0.0", port=port, debug=False)
+    # Only run the Flask development server if not running with gunicorn
+    if os.environ.get("GUNICORN_WORKER_CLASS") is None:
+        app.run(host="0.0.0.0", port=port, debug=False)
+    else:
+        logger.info("Running with gunicorn")
