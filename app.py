@@ -16,9 +16,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Log startup info
+logger.info("Starting application...")
+logger.info(f"Python version: {sys.version}")
 
 # Load environment variables
 load_dotenv()
+
+# Log environment info (except sensitive data)
+logger.info(f"Environment: {os.environ.get('RAILWAY_ENVIRONMENT', 'development')}")
+logger.info(f"Public URL: {os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'local')}")
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -34,6 +41,8 @@ try:
 except Exception as e:
     logger.error(f"Failed to initialize OpenAI client: {str(e)}")
     sys.exit(1)
+
+
 
 @app.route("/")
 def index():
