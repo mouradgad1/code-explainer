@@ -31,6 +31,7 @@ except Exception as e:
 @app.route("/")
 def index():
     try:
+        logger.info("Rendering index.html")
         return render_template("index.html", project_name="Software Development")
     except Exception as e:
         logger.error(f"Error rendering index.html: {str(e)}")
