@@ -7,8 +7,20 @@ import openai
 from openai import OpenAI
 
 # Configure logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
 logger = logging.getLogger(__name__)
+
+# Log environment variables (except sensitive ones)
+logger.info("Starting application...")
+logger.info(f"Python version: {sys.version}")
+logger.info(f"OpenAI version: {openai.__version__}")
+logger.info(f"Environment variables: { {k: v for k, v in os.environ.items() if 'KEY' not in k and 'SECRET' not in k} }")
 
 # Load environment variables
 load_dotenv()
@@ -32,10 +44,16 @@ except Exception as e:
 def index():
     try:
         logger.info("Rendering index.html")
+        # Verify template exists
+        template_path = os.path.join('templates', 'index.html')
+        if not os.path.exists(template_path):
+            logger.error(f"Template not found at: {os.path.abspath(template_path)}")
+            return f"Template not found: {template_path}", 500
+            
         return render_template("index.html", project_name="Software Development")
     except Exception as e:
-        logger.error(f"Error rendering index.html: {str(e)}")
-        return "An error occurred while loading the page. Please check the logs for more details.", 500
+        logger.error(f"Error rendering index.html: {str(e)}", exc_info=True)
+        return f"An error occurred while loading the page: {str(e)}", 500
 
 @app.route("/code-explainer")
 def code_explainer():
