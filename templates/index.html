@@ -7,11 +7,99 @@
 </head>
 <body>
   <header>
-    <h1>{{ project_name }}</h1>
+    <h2>{{ project_name }}</h2>
   </header>
+
   <main>
-    <p>Welcome to SoftwareDevelopment.websitey!</p>
-    <p><a href="/code-explainer">Try the Code Explainer Tool →</a></p>
+    <div class="center-button">
+      <button class="cta-button" onclick="toggleCodeBox()">code explanation</button>
+      <button class="cta-button" onclick="toggleQuestionBox()">ask for help</button>
+      <button class="cta-button" onclick="toggleToolBox()">helpful tools</button>
+    </div>
+
+    <div id="code-section" class="hidden">
+      <p>Paste your code below and get an instant explanation:</p>
+      <textarea id="code" rows="10" cols="60"></textarea><br>
+      <button class="cta-button" onclick="sendCode()">Explain</button>
+      <pre id="result"></pre>
+    </div>
+
+    <div id="question-box" class="hidden">
+      <p>Ask any coding question:</p>
+      <textarea id="user-question" rows="5" cols="60"></textarea><br>
+      <button class="cta-button" onclick="submitQuestion()">Submit</button>
+      <pre id="question-response"></pre>
+    </div>
+
+    <div id="tool-box" class="hidden">
+      <h3>Helpful Coding Tools</h3>
+      <ul style="text-align:left; margin: 0 auto; max-width: 700px;">
+        <li><strong>Stack Overflow</strong>: Q&A community for programming problems.  
+          <br><a href="https://stackoverflow.com" target="_blank">Visit</a>  
+          <br><em>Used in: All fields</em>
+        </li><br>
+        <li><strong>GitHub Copilot</strong>: AI code suggestion inside VS Code.  
+          <br><a href="https://github.com/features/copilot" target="_blank">Visit</a>  
+          <br><em>Used in: Web, AI, software dev</em>
+        </li><br>
+        <li><strong>Regex101</strong>: Online regex tester with explanation.  
+          <br><a href="https://regex101.com" target="_blank">Visit</a>  
+          <br><em>Used in: Scripting, parsing, validation</em>
+        </li><br>
+        <li><strong>MDN Web Docs</strong>: Web dev documentation and tutorials.  
+          <br><a href="https://developer.mozilla.org" target="_blank">Visit</a>  
+          <br><em>Used in: HTML, CSS, JS, APIs</em>
+        </li>
+      </ul>
+    </div>
   </main>
+
+<script>
+  function toggleCodeBox() {
+    showOnly("code-section");
+  }
+
+  function toggleQuestionBox() {
+    showOnly("question-box");
+  }
+
+  function toggleToolBox() {
+    showOnly("tool-box");
+  }
+
+  function showOnly(idToShow) {
+    ["code-section", "question-box", "tool-box"].forEach(id => {
+      document.getElementById(id).classList.add("hidden");
+    });
+    document.getElementById(idToShow).classList.remove("hidden");
+  }
+
+  function sendCode() {
+    const code = document.getElementById("code").value;
+    fetch("/api/explain", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code })
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("result").textContent = data.explanation;
+    });
+  }
+
+  function submitQuestion() {
+    const question = document.getElementById("user-question").value;
+    fetch("/api/question", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question })
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById("question-response").innerHTML = marked.parse(data.answer);
+    });
+  }
+</script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </body>
 </html>

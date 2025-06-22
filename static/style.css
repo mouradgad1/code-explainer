@@ -1,42 +1,142 @@
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #121212;
+  color: #f0f0f0;
   text-align: center;
 }
 
 header {
-  background-color: #282c34;
-  color: white;
-  padding: 20px 0;
+  position: relative;
+  z-index: 1;
+  padding: 10px;
+  padding-bottom: 10px;
 }
 
-main {
-  margin: 40px auto;
-  width: 90%;
-  max-width: 800px;
+header::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 0;
+  background: linear-gradient(45deg, #fbfbfb, #777777, #222222, #ffffff, #002a31, #00e1ff);
+  background-size: 400%;
+  animation: rgbBorder 8s linear infinite;
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: destination-out;
+  padding: 2px;
+  box-sizing: border-box;
+  z-index: -1;
+}
+
+.center-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  margin: 100px 0 20px;
+}
+
+.center-button .left {
+  order: 2;
+}
+
+.center-button .middle {
+  order: 1;
+}
+
+.center-button .right {
+  order: 3;
+}
+
+.cta-button {
   font-size: 18px;
+  padding: 10px 15px;
+  color: white;
+  background-color: #1f1f1f;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 40px;
+  background: linear-gradient(45deg, #fbfbfb, #777777, #222222, #ffffff, #002f37, #00e1ff);
+  background-size: 400%;
+  animation: rgbBorder 8s linear infinite;
+  mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: destination-out;
+  padding: 2px;
+  box-sizing: border-box;
+}
+
+@keyframes rgbBorder {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.cta-button:hover {
+  background-color: #333;
+}
+.hidden {
+  display: none;
 }
 
 textarea {
-  width: 100%;
-  font-family: monospace;
+  width: 90%;
+  max-width: 700px;
   padding: 10px;
-  font-size: 16px;
-}
-
-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #1e1e1e;
+  color: white;
+  margin-bottom: 10px;
 }
 
 pre {
-  margin-top: 20px;
-  background-color: #eee;
+  background-color: #1e1e1e;
+  color: #ffffff;
   padding: 15px;
-  text-align: left;
+  border-radius: 6px;
   white-space: pre-wrap;
-  word-wrap: break-word;
+  text-align: left;
+  width: 90%;
+  max-width: 700px;
+  margin: 15px auto;
 }
