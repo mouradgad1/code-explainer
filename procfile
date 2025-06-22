@@ -1,1 +1,1 @@
-web: python app.py
+web: gunicorn wsgi:application --workers 2 --threads 4 --bind 0.0.0.0:$PORT --timeout 120 --worker-class gthread --log-level=info --access-logfile - --error-logfile -
