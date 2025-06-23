@@ -2,104 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{ project_name }} | Welcome</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <title>Login | Code Explainer</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='auth.css') }}">
 </head>
 <body>
-  <header>
-    <h2>{{ project_name }}</h2>
-  </header>
-
-  <main>
-    <div class="center-button">
-      <button class="cta-button" onclick="toggleCodeBox()">code explanation</button>
-      <button class="cta-button" onclick="toggleQuestionBox()">ask for help</button>
-      <button class="cta-button" onclick="toggleToolBox()">helpful tools</button>
+  <div class="auth-container">
+    <div class="form-box" id="login-box">
+      <h2>Login</h2>
+      <form onsubmit="return handleLogin(event)">
+        <input type="email" id="login-email" placeholder="Email" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button type="submit">Login</button>
+        <p class="switch">Don't have an account? <a href="#" onclick="switchForm('signup')">Sign up</a></p>
+        <p class="forgot"><a href="#">Forgot Password?</a></p>
+      </form>
     </div>
 
-    <div id="code-section" class="hidden">
-      <p>Paste your code below and get an instant explanation:</p>
-      <textarea id="code" rows="10" cols="60"></textarea><br>
-      <button class="cta-button" onclick="sendCode()">Explain</button>
-      <pre id="result"></pre>
+    <div class="form-box hidden" id="signup-box">
+      <h2>Sign Up</h2>
+      <form onsubmit="return handleSignup(event)">
+        <input type="text" id="signup-name" placeholder="Full Name" required>
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <button type="submit">Sign Up</button>
+        <p class="switch">Already have an account? <a href="#" onclick="switchForm('login')">Login</a></p>
+      </form>
     </div>
+  </div>
 
-    <div id="question-box" class="hidden">
-      <p>Ask any coding question:</p>
-      <textarea id="user-question" rows="5" cols="60"></textarea><br>
-      <button class="cta-button" onclick="submitQuestion()">Submit</button>
-      <pre id="question-response"></pre>
-    </div>
+  <script>
+    function switchForm(form) {
+      document.getElementById("login-box").classList.toggle("hidden", form !== "login");
+      document.getElementById("signup-box").classList.toggle("hidden", form !== "signup");
+    }
 
-    <div id="tool-box" class="hidden">
-      <h3>Helpful Coding Tools</h3>
-      <ul style="text-align:left; margin: 0 auto; max-width: 700px;">
-        <li><strong>Stack Overflow</strong>: Q&A community for programming problems.  
-          <br><a href="https://stackoverflow.com" target="_blank">Visit</a>  
-          <br><em>Used in: All fields</em>
-        </li><br>
-        <li><strong>GitHub Copilot</strong>: AI code suggestion inside VS Code.  
-          <br><a href="https://github.com/features/copilot" target="_blank">Visit</a>  
-          <br><em>Used in: Web, AI, software dev</em>
-        </li><br>
-        <li><strong>Regex101</strong>: Online regex tester with explanation.  
-          <br><a href="https://regex101.com" target="_blank">Visit</a>  
-          <br><em>Used in: Scripting, parsing, validation</em>
-        </li><br>
-        <li><strong>MDN Web Docs</strong>: Web dev documentation and tutorials.  
-          <br><a href="https://developer.mozilla.org" target="_blank">Visit</a>  
-          <br><em>Used in: HTML, CSS, JS, APIs</em>
-        </li>
-      </ul>
-    </div>
-  </main>
+    function handleLogin(event) {
+      event.preventDefault();
+      window.location.href = "/code_explainer.html"; // simulate login redirect
+      return false;
+    }
 
-<script>
-  function toggleCodeBox() {
-    showOnly("code-section");
-  }
-
-  function toggleQuestionBox() {
-    showOnly("question-box");
-  }
-
-  function toggleToolBox() {
-    showOnly("tool-box");
-  }
-
-  function showOnly(idToShow) {
-    ["code-section", "question-box", "tool-box"].forEach(id => {
-      document.getElementById(id).classList.add("hidden");
-    });
-    document.getElementById(idToShow).classList.remove("hidden");
-  }
-
-  function sendCode() {
-    const code = document.getElementById("code").value;
-    fetch("/api/explain", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code })
-    })
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById("result").textContent = data.explanation;
-    });
-  }
-
-  function submitQuestion() {
-    const question = document.getElementById("user-question").value;
-    fetch("/api/question", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question })
-    })
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById("question-response").innerHTML = marked.parse(data.answer);
-    });
-  }
-</script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    function handleSignup(event) {
+      event.preventDefault();
+      alert("Sign up successful. Please log in.");
+      switchForm("login");
+      return false;
+    }
+  </script>
 </body>
 </html>
