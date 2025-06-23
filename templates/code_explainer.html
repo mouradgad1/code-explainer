@@ -2,42 +2,45 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>{{ project_name }} | Welcome</title>
+  <title>{{ project_name }} | Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
- <header>
+  <header>
+    <button class="dashboard-toggle" onclick="toggleDashboard()">...</button>
     <h2>{{ project_name }}</h2>
-    <button class="dashboard-toggle" onclick="toggleDashboard()">⋯</button>
+    <button class="mode-toggle" onclick="toggleDarkMode()">⏾</button>
   </header>
 
   <div class="dashboard" id="dashboard">
     <ul>
-      <li><a href="#">👤 Profile</a></li>
-      <li><a href="#">⚙️ Settings</a></li>
-      <li><a href="#">📩 Contact Us</a></li>
+      <li><a href="/code_explainer.html">Main</a></li>
+      <li><a href="#" onclick="showSection('profile')">Profile</a></li>
+      <li><a href="#" onclick="showSection('settings')">Settings</a></li>
+      <li><a href="#" onclick="showSection('contact')">Contact Us</a></li>
     </ul>
   </div>
 
   <div class="dashboard-content" id="dashboard-content">
-    <main>
+    <main id="main-section">
       <div class="center-button">
-        <button class="cta-button" onclick="toggleCodeBox()">code explanation</button>
-        <button class="cta-button" onclick="toggleQuestionBox()">ask for help</button>
-        <button class="cta-button" onclick="toggleToolBox()">helpful tools</button>
+        <button class="cta-button" onclick="toggleCodeBox()">Code Explanation</button>
+        <button class="cta-button" onclick="toggleQuestionBox()">Ask for Help</button>
+        <button class="cta-button" onclick="toggleToolBox()">Helpful Tools</button>
       </div>
 
       <div id="code-section" class="hidden">
         <p>Paste your code below and get an instant explanation:</p>
-        <textarea id="code" rows="10" cols="60"></textarea><br>
+        <textarea id="code" rows="10"></textarea><br>
         <button class="cta-button" onclick="sendCode()">Explain</button>
         <pre id="result"></pre>
       </div>
 
       <div id="question-box" class="hidden">
         <p>Ask any coding question:</p>
-        <textarea id="user-question" rows="5" cols="60"></textarea><br>
+        <textarea id="user-question" rows="5"></textarea><br>
         <button class="cta-button" onclick="submitQuestion()">Submit</button>
         <pre id="question-response"></pre>
       </div>
@@ -45,34 +48,38 @@
       <div id="tool-box" class="hidden">
         <h3>Helpful Coding Tools</h3>
         <ul style="text-align:left; margin: 0 auto; max-width: 700px;">
-          <li><strong>Stack Overflow</strong>: Q&A community for programming problems.<br>
-            <a href="https://stackoverflow.com" target="_blank">Visit</a><br>
-            <em>Used in: All fields</em>
-          </li><br>
-          <li><strong>GitHub Copilot</strong>: AI code suggestion inside VS Code.<br>
-            <a href="https://github.com/features/copilot" target="_blank">Visit</a><br>
-            <em>Used in: Web, AI, software dev</em>
-          </li><br>
-          <li><strong>Regex101</strong>: Online regex tester with explanation.<br>
-            <a href="https://regex101.com" target="_blank">Visit</a><br>
-            <em>Used in: Scripting, parsing, validation</em>
-          </li><br>
-          <li><strong>MDN Web Docs</strong>: Web dev documentation and tutorials.<br>
-            <a href="https://developer.mozilla.org" target="_blank">Visit</a><br>
-            <em>Used in: HTML, CSS, JS, APIs</em>
-          </li>
+          <li><strong>Stack Overflow</strong>: <a href="https://stackoverflow.com" target="_blank">Visit</a></li>
+          <li><strong>GitHub Copilot</strong>: <a href="https://github.com/features/copilot" target="_blank">Visit</a></li>
+          <li><strong>Regex101</strong>: <a href="https://regex101.com" target="_blank">Visit</a></li>
+          <li><strong>MDN Web Docs</strong>: <a href="https://developer.mozilla.org" target="_blank">Visit</a></li>
         </ul>
       </div>
     </main>
+
+    <section id="profile" class="hidden">
+      <h2>Profile</h2>
+      <form>
+        <input class="name" type="text" placeholder="Your Name"><br>
+        <input class="bio" type="text" placeholder="Bio"><br>
+        <button class="saving" type="submit">Save</button>
+      </form>
+    </section>
+
+    <section id="settings" class="hidden">
+      <h2>Settings</h2>
+      <p>More coming soon.</p>
+    </section>
+
+    <section id="contact" class="hidden">
+      <h2>Contact Us</h2>
+      <p>Email: <a href="mailto:gadmourad1@gmail.com">gadmourad1@gmail.com</a></p>
+      <p>Phone: <a href="tel:+201060652421">+20 1060652421</a></p>
+    </section>
   </div>
 
   <script>
     function toggleDashboard() {
-      const dash = document.getElementById("dashboard");
-      dash.classList.toggle("show");
-
-      const content = document.getElementById("dashboard-content");
-      content.classList.toggle("shifted");
+      document.getElementById("dashboard").classList.toggle("show");
     }
 
     function toggleCodeBox() {
@@ -88,10 +95,18 @@
     }
 
     function showOnly(idToShow) {
-      ["code-section", "question-box", "tool-box"].forEach(id => {
-        document.getElementById(id).classList.add("hidden");
-      });
+      ["code-section", "question-box", "tool-box"].forEach(id =>
+        document.getElementById(id).classList.add("hidden")
+      );
       document.getElementById(idToShow).classList.remove("hidden");
+    }
+
+    function showSection(sectionId) {
+      ["main-section", "profile", "settings", "contact"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add("hidden");
+      });
+      document.getElementById(sectionId).classList.remove("hidden");
     }
 
     function sendCode() {
@@ -101,9 +116,10 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code })
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
-        document.getElementById("result").textContent = data.explanation;
+        // Use marked.parse for Markdown support
+        document.getElementById("result").innerHTML = marked.parse(data.explanation);
       });
     }
 
@@ -114,11 +130,23 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question })
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(data => {
         document.getElementById("question-response").innerHTML = marked.parse(data.answer);
       });
     }
+
+    function toggleDarkMode() {
+      const isLight = document.body.classList.toggle('light-mode');
+      localStorage.setItem("theme", isLight ? "light" : "dark");
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "light") {
+        document.body.classList.add("light-mode");
+      }
+    });
   </script>
 </body>
 </html>

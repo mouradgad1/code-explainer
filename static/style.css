@@ -9,22 +9,28 @@ body {
   background: #0f0f0f;
   color: #f0f0f0;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
+  display: block;
+  padding-top: 12px;
+  transition: background 0.4s ease, color 0.4s ease;
 }
 
 header {
   width: 100%;
   text-align: center;
   margin-bottom: 30px;
+  border-radius: 2px;
+  border-bottom: 2px solid;
+  border-image: linear-gradient(90deg, #ffffff, #007cf0, #00e1ff) 1;
+  animation : rpgborder 8s infinite
 }
 
 header h2 {
   font-size: 28px;
-  color: #00e1ff;
-  text-shadow: 0 0 8px #00e1ff;
+  color: #ffffff;
+  text-shadow: 0 0 8px #f9f9f9;
+  padding: 9px;
+  margin-left: -800px;
+  font-family:'Courier New', Courier, monospace
 }
 
 .dashboard-toggle {
@@ -32,6 +38,7 @@ header h2 {
   top: 20px;
   left: 20px;
   font-size: 28px;
+  margin-top: -8px;
   background: none;
   border: none;
   color: #ffffff;
@@ -70,7 +77,7 @@ header h2 {
   text-decoration: none;
   padding: 10px 20px;
   display: block;
-  transition: background 0.3s ease;
+
 }
 
 .dashboard a:hover {
@@ -80,6 +87,7 @@ header h2 {
 main {
   width: 100%;
   max-width: 800px;
+  margin-left: 210px;
 }
 
 .center-button {
@@ -87,7 +95,9 @@ main {
   justify-content: center;
   flex-wrap: wrap;
   gap: 20px;
-  margin: 30px 0;
+  margin: 10px 0;
+  margin-bottom: 90px;
+  margin-left: -400px;
 }
 
 .cta-button {
@@ -96,29 +106,12 @@ main {
   background: #1f1f1f;
   color: #fff;
   border-radius: 30px;
-  border: 2px solid transparent;
-  position: relative;
+  border: 2px solid black;
+  margin-left: -10px;
   cursor: pointer;
-  transition: background 0.3s ease;
+
 }
 
-.cta-button::before {
-  content: "";
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  border-radius: 30px;
-  background: linear-gradient(45deg, #00e1ff, #007cf0, #00e1ff);
-  z-index: -1;
-  background-size: 400%;
-  animation: rgbBorder 6s linear infinite;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: destination-out;
-}
 
 @keyframes rgbBorder {
   0% { background-position: 0% 50%; }
@@ -130,16 +123,6 @@ main {
   background: #333;
 }
 
-.card-section {
-  background: #1a1a1a;
-  border-radius: 12px;
-  padding: 20px;
-  margin: 15px auto;
-  width: 100%;
-  max-width: 700px;
-  box-shadow: 0 0 8px rgba(0, 225, 255, 0.2);
-  text-align: left;
-}
 
 textarea {
   width: 100%;
@@ -164,4 +147,89 @@ pre {
 
 .hidden {
   display: none;
+}
+
+.name, .bio, .saving {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #22222200;
+  color: rgb(255, 255, 255);
+  margin-top: 10px;
+  resize: vertical;
+}
+
+body.light-mode {
+  background: #f4f4f4;
+  color: #111;
+}
+
+body.light-mode .dashboard {
+  background-color: #eaeaea;
+  border-right: 1px solid #ccc;
+}
+
+body.light-mode .dashboard a {
+  color: #111;
+}
+body.light-mode .dashboard-toggle{
+  color: #111;
+}
+body.light-mode .dashboard a:hover {
+  background-color: #ddd;
+}
+
+body.light-mode .cta-button {
+  background-color: #ffffff;
+  color: #111;
+}
+body.light-mode header h2{
+  color: #111;
+  text-shadow: 0 0 8px #080808;
+}
+body.light-mode .card-section {
+  background-color: #ffffff;
+  color: #111;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+body.light-mode header{
+  border-image: linear-gradient(90deg, #000000, #bc0000, #ff3434) 1;
+}
+body.light-mode textarea,
+body.light-mode .name,
+body.light-mode .bio,
+body.light-mode .saving {
+  background: #ffffff;
+  color: #111;
+  border: 1px solid #ccc;
+}
+.mode-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  margin-top: -10px;
+  border-radius: 50%;
+  border: none;
+  font-size: 18px;
+  background: #33333300;
+  color: #fff;
+  cursor: pointer;
+  z-index: 15;
+  transition: background 0.4s ease, color 0.4s ease, border 0.4s ease, text-shadow 0.4s ease;
+}
+
+.mode-toggle:hover {
+  background: #555;
+}
+
+body.light-mode .mode-toggle {
+  background: #dddddd00;
+  color: #111;
+}
+
+body.light-mode .mode-toggle:hover {
+  background: #bbb;
 }

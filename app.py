@@ -9,11 +9,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("index.html", project_name="Software Development")
+    return render_template("index.html")
 
 @app.route("/code_explainer.html")
 def code_explainer():
-    return render_template("code_explainer.html")
+    return render_template("code_explainer.html", project_name="Software Development")
 
 @app.route("/api/explain", methods=["POST"])
 def explain_code():
@@ -26,7 +26,7 @@ def explain_code():
         response = client.chat.completions.create(
             model="gpt-4.1-nano-2025-04-14",
             messages=messages,
-            max_tokens=300,  # adjusted
+            max_tokens=300,  
             temperature=0.7
         )
         return jsonify({'explanation': response.choices[0].message.content.strip()})
@@ -48,7 +48,7 @@ def answer_question():
         response = client.chat.completions.create(
             model="gpt-4.1-nano-2025-04-14",
             messages=messages,
-            max_tokens=400,  # slightly higher for structured answers
+            max_tokens=400,  
             temperature=0.7
         )
         return jsonify({'answer': response.choices[0].message.content.strip()})
