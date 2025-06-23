@@ -1,15 +1,14 @@
-# ai_routes.py
 import os
 from flask import Blueprint, request, jsonify
-from dotenv import load_dotenv
 from openai import OpenAI
+from dotenv import load_dotenv
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-ai = Blueprint("ai", __name__)
+ai_routes = Blueprint("ai_routes", __name__)
 
-@ai.route("/api/explain", methods=["POST"])
+@ai_routes.route("/api/explain", methods=["POST"])
 def explain_code():
     code = request.json.get("code")
     try:
@@ -27,7 +26,7 @@ def explain_code():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-@ai.route("/api/question", methods=["POST"])
+@ai_routes.route("/api/question", methods=["POST"])
 def answer_question():
     question = request.json.get("question")
     try:
