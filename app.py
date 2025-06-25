@@ -16,7 +16,8 @@ def explain_code():
     code = request.json.get("code")
     try:
         messages = [
-            {"role": "system", "content": "You are a helpful assistant tasked with explaining code."},
+            {"role": "system", "content": ("You are a helpful assistant tasked with explaining code."
+             "the answer must be very breif , like very very breif , enough to fit 300 token ")},
             {"role": "user", "content": code}
         ]
         response = client.chat.completions.create(
@@ -38,6 +39,7 @@ def answer_question():
                 "You are a teacher helping programmers by answering their questions. "
                 "The answer must be simple yet technical, divided into clear sections. "
                 "Refuse to answer anything not related to programming."
+                "the answer must be as breif as breif can be. enough to fit 300 token"
             )},
             {"role": "user", "content": question}
         ]
