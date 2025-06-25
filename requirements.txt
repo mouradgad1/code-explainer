@@ -8,4 +8,3 @@ itsdangerous==2.1.2
 click==8.1.7
 setuptools==69.5.1
 wheel==0.43.0
-Flask-Limiter
